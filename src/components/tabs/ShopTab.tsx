@@ -200,13 +200,13 @@ export const ShopTab: React.FC<ShopTabProps> = ({
                   {!isOwned ? (
                     <button
                       onClick={() => onBuyProduct(product.id)}
-                      className="w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-pixel text-xs rounded-xl retro-btn flex items-center justify-between cursor-pointer shadow-md"
+                      className="w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-pixel text-xs rounded-xl retro-btn flex items-center justify-between cursor-pointer shadow-md min-h-[48px]"
                     >
                       <span>COMPRAR</span>
                       <span>{formatPrice(product.priceBRL)}</span>
                     </button>
                   ) : (
-                    <div className="w-full py-2 text-center text-purple-300 font-pixel text-[10px] bg-purple-950/60 rounded-xl border border-purple-500/40">
+                    <div className="w-full py-2 text-center text-purple-300 font-pixel text-[10px] bg-purple-950/60 rounded-xl border border-purple-500/40 min-h-[48px] flex items-center justify-center">
                       VINCULADO À CONTA
                     </div>
                   )}

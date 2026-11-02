@@ -250,7 +250,7 @@ export const StaffTab: React.FC<StaffTabProps> = ({
                 </div>
 
                 {/* Promotion & Bonus Buttons */}
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   {nextRank ? (
                     <button
                       onClick={() => {
@@ -260,46 +260,48 @@ export const StaffTab: React.FC<StaffTabProps> = ({
                         }
                       }}
                       disabled={!canPromote}
-                      className={`flex-1 py-1.5 px-2 rounded-lg font-pixel text-[10px] flex items-center justify-center gap-1.5 retro-btn cursor-pointer ${
+                      className={`flex-1 py-2 px-2.5 rounded-lg font-pixel text-[10px] flex items-center justify-center gap-1.5 retro-btn cursor-pointer min-h-[44px] ${
                         canPromote
-                          ? 'bg-amber-500 hover:bg-amber-400 text-slate-950'
+                          ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold'
                           : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                       }`}
                     >
-                      <Award className="w-3.5 h-3.5" />
-                      <span>Promover a {RANK_LABELS[nextRank]} (R$ {upgradeCost})</span>
+                      <Award className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">Promover a {RANK_LABELS[nextRank]} (R$ {upgradeCost})</span>
                     </button>
                   ) : (
-                    <div className="flex-1 py-1.5 px-2 text-center font-pixel text-[10px] text-yellow-400 bg-yellow-950/40 rounded-lg border border-yellow-500/40">
+                    <div className="flex-1 py-2 px-2 text-center font-pixel text-[10px] text-yellow-400 bg-yellow-950/40 rounded-lg border border-yellow-500/40 min-h-[44px] flex items-center justify-center">
                       ⭐ NÍVEL LENDÁRIO MÁXIMO ⭐
                     </div>
                   )}
 
-                  <button
-                    onClick={() => {
-                      if (state.cash >= 200) {
-                        onBonusEmployee(emp.id);
-                        soundEngine.playRegister();
-                      }
-                    }}
-                    disabled={state.cash < 200 || emp.morale >= 100}
-                    className="py-1.5 px-2 bg-emerald-700 hover:bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-[10px] rounded-lg retro-btn cursor-pointer"
-                    title="Bônus Financeiro para recuperar moral"
-                  >
-                    +Bônus (R$ 200)
-                  </button>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => {
+                        if (state.cash >= 200) {
+                          onBonusEmployee(emp.id);
+                          soundEngine.playRegister();
+                        }
+                      }}
+                      disabled={state.cash < 200 || emp.morale >= 100}
+                      className="flex-1 sm:flex-initial py-2 px-3 bg-emerald-700 hover:bg-emerald-600 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-[10px] rounded-lg retro-btn cursor-pointer min-h-[44px] flex items-center justify-center"
+                      title="Bônus Financeiro para recuperar moral"
+                    >
+                      +Bônus (R$ 200)
+                    </button>
 
-                  <button
-                    onClick={() => {
-                      if (confirm(`Deseja demitir ${emp.name}?`)) {
-                        onFireEmployee(emp.id);
-                      }
-                    }}
-                    className="p-1.5 bg-rose-950/60 hover:bg-rose-900 border border-rose-700/60 text-rose-400 rounded-lg cursor-pointer"
-                    title="Demitir funcionário"
-                  >
-                    <UserMinus className="w-3.5 h-3.5" />
-                  </button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`Deseja demitir ${emp.name}?`)) {
+                          onFireEmployee(emp.id);
+                        }
+                      }}
+                      className="p-2.5 bg-rose-950/60 hover:bg-rose-900 border border-rose-700/60 text-rose-400 rounded-lg cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
+                      title="Demitir funcionário"
+                    >
+                      <UserMinus className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

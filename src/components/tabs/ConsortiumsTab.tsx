@@ -160,14 +160,14 @@ export const ConsortiumsTab: React.FC<ConsortiumsTabProps> = ({
                         onPayConsortiumInstallment(cons.id);
                       }}
                       disabled={!canPayInstallment}
-                      className={`w-full py-2.5 px-3 rounded-lg font-pixel text-xs flex items-center justify-center gap-1.5 transition-transform active:scale-95 cursor-pointer min-h-[44px] ${
+                      className={`w-full py-2.5 px-3 rounded-lg font-pixel text-[10px] sm:text-xs flex items-center justify-center gap-1.5 transition-transform active:scale-95 cursor-pointer min-h-[48px] ${
                         canPayInstallment
                           ? 'bg-purple-600 hover:bg-purple-500 text-white shadow'
                           : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                       }`}
                     >
-                      <Ticket className="w-4 h-4" />
-                      <span>
+                      <Ticket className="w-4 h-4 shrink-0" />
+                      <span className="truncate">
                         Pagar Parcela ({cons.paidInstallments}/{cons.totalInstallments})
                       </span>
                     </button>
@@ -179,14 +179,14 @@ export const ConsortiumsTab: React.FC<ConsortiumsTabProps> = ({
                           onBidConsortium(cons.id);
                         }}
                         disabled={!canBid}
-                        className={`w-full py-2 px-3 rounded-lg font-pixel text-[11px] flex items-center justify-center gap-1 transition-transform active:scale-95 cursor-pointer min-h-[40px] ${
+                        className={`w-full py-2.5 px-3 rounded-lg font-pixel text-[10px] sm:text-xs flex items-center justify-center gap-1.5 transition-transform active:scale-95 cursor-pointer min-h-[48px] ${
                           canBid
                             ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow'
                             : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                         }`}
                       >
-                        <Award className="w-3.5 h-3.5" />
-                        <span>Dar Lance ({formatBRL(bidValue)})</span>
+                        <Award className="w-4 h-4 shrink-0" />
+                        <span className="truncate">Dar Lance ({formatBRL(bidValue)})</span>
                       </button>
                     )}
                   </div>

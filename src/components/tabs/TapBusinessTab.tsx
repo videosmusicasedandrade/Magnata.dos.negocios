@@ -48,10 +48,10 @@ export const TapBusinessTab: React.FC<TapBusinessTabProps> = ({
             onManualTap();
             soundEngine.playCoin();
           }}
-          className="w-full md:w-auto px-6 py-3.5 bg-gradient-to-b from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-pixel text-sm rounded-xl retro-btn flex items-center justify-center gap-3 cursor-pointer shadow-lg active:scale-95 transition-transform"
+          className="w-full md:w-auto px-4 py-3 sm:px-6 sm:py-3.5 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-pixel text-xs sm:text-sm rounded-xl retro-btn flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95 transition-transform min-h-[48px] font-bold"
         >
-          <MousePointerClick className="w-5 h-5" />
-          <span>FATURAR (+R$ {clickPower.toLocaleString('pt-BR')})</span>
+          <MousePointerClick className="w-4 h-4 shrink-0" />
+          <span className="truncate">FATURAR (+R$ {clickPower.toLocaleString('pt-BR')})</span>
         </button>
       </div>
 

@@ -143,11 +143,23 @@ export const OfficeCanvas: React.FC<OfficeCanvasProps> = ({
       const width = canvas.width;
       const height = canvas.height;
 
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+
+      // Virtual Coordinate Resolution (600 x 380)
+      const VIRTUAL_W = 600;
+      const VIRTUAL_H = 380;
+      const scaleX = width / VIRTUAL_W;
+      const scaleY = height / VIRTUAL_H;
+
+      ctx.save();
+      ctx.scale(scaleX, scaleY);
+
       // 1. Draw Background: Sky & City View from Skyscraper
-      drawSkyline(ctx, width, height, skyscraperFloors, time);
+      drawSkyline(ctx, VIRTUAL_W, VIRTUAL_H, skyscraperFloors, time);
 
       // 2. Draw Office Room Interior
-      drawOfficeRoom(ctx, width, height, skyscraperFloors, deskShakeRef.current);
+      drawOfficeRoom(ctx, VIRTUAL_W, VIRTUAL_H, skyscraperFloors, deskShakeRef.current);
 
       // Decay desk shake
       if (deskShakeRef.current > 0) {
@@ -162,7 +174,7 @@ export const OfficeCanvas: React.FC<OfficeCanvasProps> = ({
       updateAndDrawWorkers(ctx, workersRef.current, time);
 
       // 5. Draw CEO Centerpiece Desk (Tap Area)
-      drawCEODesk(ctx, width / 2, height - 70, deskShakeRef.current);
+      drawCEODesk(ctx, VIRTUAL_W / 2, VIRTUAL_H - 65, deskShakeRef.current);
 
       // 6. Update and Draw Particles
       updateAndDrawParticles(ctx, particlesRef.current);
@@ -172,11 +184,13 @@ export const OfficeCanvas: React.FC<OfficeCanvasProps> = ({
 
       // 8. Hacker Invasion Glitch Lines Overlay
       if (hackerAttackUnderway) {
-        drawHackerAlarmOverlay(ctx, width, height, time);
+        drawHackerAlarmOverlay(ctx, VIRTUAL_W, VIRTUAL_H, time);
       }
 
       // 9. Economic cycle ambiance overlay (subtle bottom ticker arrow particles)
-      drawCycleAmbiance(ctx, width, height, economicCycle, time);
+      drawCycleAmbiance(ctx, VIRTUAL_W, VIRTUAL_H, economicCycle, time);
+
+      ctx.restore();
 
       animFrameRef.current = requestAnimationFrame(render);
     };
@@ -207,8 +221,10 @@ export const OfficeCanvas: React.FC<OfficeCanvasProps> = ({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const scaleX = (canvas.width || 600) / 600;
+    const scaleY = (canvas.height || 380) / 380;
+    const x = (e.clientX - rect.left) / scaleX;
+    const y = (e.clientY - rect.top) / scaleY;
 
     // Check if worker was tapped
     for (const w of workersRef.current) {
@@ -272,7 +288,7 @@ export const OfficeCanvas: React.FC<OfficeCanvasProps> = ({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[400px] sm:h-[460px] md:h-[500px] overflow-hidden rounded-xl border-4 border-slate-700 bg-slate-900 shadow-2xl retro-box select-none cursor-pointer"
+      className="relative w-full h-[250px] sm:h-[320px] md:h-[380px] overflow-hidden rounded-xl border-4 border-slate-700 bg-slate-900 shadow-xl retro-box select-none cursor-pointer"
     >
       <canvas
         ref={canvasRef}
@@ -282,19 +298,19 @@ export const OfficeCanvas: React.FC<OfficeCanvasProps> = ({
 
       {/* Floating Combo Indicator */}
       {comboCount > 2 && (
-        <div className="absolute top-4 right-4 bg-amber-500/90 text-slate-950 font-pixel text-xs px-3 py-1.5 rounded-md shadow-lg border-2 border-amber-300 animate-bounce pointer-events-none">
+        <div className="absolute top-3 right-3 bg-amber-500/95 text-slate-950 font-pixel text-[10px] sm:text-xs px-2.5 py-1 rounded shadow-lg border-2 border-amber-300 animate-bounce pointer-events-none">
           COMBO x{comboCount}! 🔥
         </div>
       )}
 
       {/* Click Hint Bar */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-slate-950/80 backdrop-blur-none border border-slate-600/70 text-slate-300 text-[11px] font-retro px-4 py-1 rounded-full pointer-events-none flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        Toque na tela para faturar moedas! (+R$ {clickPower}/toque)
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 max-w-[95%] bg-slate-950/85 border border-slate-600/70 text-slate-200 text-[9px] sm:text-[11px] font-retro px-3 py-1 rounded-full pointer-events-none flex items-center justify-center gap-1.5 truncate shadow">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
+        <span className="truncate">Toque para faturar! (+R$ {clickPower}/toque)</span>
       </div>
 
       {/* Floor & Office Badge */}
-      <div className="absolute top-3 left-3 bg-slate-900/90 border border-slate-600 text-slate-200 text-xs font-pixel px-2.5 py-1 rounded flex items-center gap-2 pointer-events-none">
+      <div className="absolute top-2.5 left-2.5 bg-slate-900/95 border border-slate-600 text-slate-200 text-[10px] sm:text-xs font-pixel px-2 py-0.5 rounded flex items-center gap-1.5 pointer-events-none">
         <span className="text-amber-400">🏢</span>
         <span>Andar {skyscraperFloors}</span>
       </div>
@@ -689,9 +705,9 @@ function drawHackerAlarmOverlay(
 
   // Header Warning Text
   ctx.fillStyle = '#ef4444';
-  ctx.font = 'bold 13px "Press Start 2P", monospace';
+  ctx.font = 'bold 10px "Press Start 2P", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('⚠️ ALERTA: ATAQUE HACKER EM ANDAMENTO! ⚠️', w / 2, 45);
+  ctx.fillText('⚠️ ALERTA: ATAQUE HACKER! ⚠️', w / 2, 35);
   ctx.restore();
 }
 

@@ -60,20 +60,20 @@ export const MarketTab: React.FC<MarketTabProps> = ({
   return (
     <div className="space-y-4">
       {/* 1. Market Sub-Navigation Bar */}
-      <div className="flex flex-wrap items-center gap-2 border-b-2 border-slate-700 pb-2">
+      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 border-b-2 border-slate-700 pb-2">
         <button
           onClick={() => {
             setSubTab('bolsa');
             soundEngine.playCoin();
           }}
-          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-pixel text-xs retro-btn cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg font-pixel text-[10px] sm:text-xs retro-btn cursor-pointer min-h-[48px] shrink-0 ${
             subTab === 'bolsa'
               ? 'bg-blue-600 text-white shadow-md'
               : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
           }`}
         >
-          <TrendingUp className="w-4 h-4 text-blue-300" />
-          <span>Bolsa de Valores ({state.stocks.length})</span>
+          <TrendingUp className="w-3.5 h-3.5 text-blue-300 shrink-0" />
+          <span>Bolsa ({state.stocks.length})</span>
         </button>
 
         <button
@@ -81,14 +81,14 @@ export const MarketTab: React.FC<MarketTabProps> = ({
             setSubTab('cripto');
             soundEngine.playCoin();
           }}
-          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-pixel text-xs retro-btn cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg font-pixel text-[10px] sm:text-xs retro-btn cursor-pointer min-h-[48px] shrink-0 ${
             subTab === 'cripto'
               ? 'bg-amber-600 text-white shadow-md'
               : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
           }`}
         >
-          <Bitcoin className="w-4 h-4 text-amber-300" />
-          <span>Criptomoedas ({state.cryptos.length})</span>
+          <Bitcoin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+          <span>Cripto ({state.cryptos.length})</span>
         </button>
 
         <button
@@ -96,14 +96,14 @@ export const MarketTab: React.FC<MarketTabProps> = ({
             setSubTab('renda_fixa');
             soundEngine.playCoin();
           }}
-          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-pixel text-xs retro-btn cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg font-pixel text-[10px] sm:text-xs retro-btn cursor-pointer min-h-[48px] shrink-0 ${
             subTab === 'renda_fixa'
               ? 'bg-emerald-600 text-white shadow-md'
               : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
           }`}
         >
-          <ShieldCheck className="w-4 h-4 text-emerald-300" />
-          <span>Renda Fixa ({state.fixedIncomes.length})</span>
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+          <span>Renda Fixa</span>
         </button>
 
         <button
@@ -111,14 +111,14 @@ export const MarketTab: React.FC<MarketTabProps> = ({
             setSubTab('consorcio');
             soundEngine.playCoin();
           }}
-          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-pixel text-xs retro-btn cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg font-pixel text-[10px] sm:text-xs retro-btn cursor-pointer min-h-[48px] shrink-0 ${
             subTab === 'consorcio'
               ? 'bg-purple-600 text-white shadow-md'
               : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
           }`}
         >
-          <Building className="w-4 h-4 text-purple-300" />
-          <span>Consórcios ({state.consortiums.length})</span>
+          <Building className="w-3.5 h-3.5 text-purple-300 shrink-0" />
+          <span>Consórcios</span>
         </button>
       </div>
 
@@ -253,9 +253,12 @@ export const MarketTab: React.FC<MarketTabProps> = ({
                       soundEngine.playTrade(true);
                     }}
                     disabled={state.cash < selectedStock.price * tradeAmount}
-                    className="py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-xs rounded-lg retro-btn cursor-pointer"
+                    className="p-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-[10px] sm:text-xs rounded-lg retro-btn cursor-pointer min-h-[48px] flex flex-col items-center justify-center text-center"
                   >
-                    COMPRAR ({formatBRL(selectedStock.price * tradeAmount)})
+                    <span>COMPRAR</span>
+                    <span className="text-[9px] font-retro opacity-90 truncate max-w-full">
+                      {formatBRL(selectedStock.price * tradeAmount)}
+                    </span>
                   </button>
 
                   <button
@@ -264,9 +267,12 @@ export const MarketTab: React.FC<MarketTabProps> = ({
                       soundEngine.playTrade(false);
                     }}
                     disabled={selectedStock.owned <= 0}
-                    className="py-2.5 bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-xs rounded-lg retro-btn cursor-pointer"
+                    className="p-2 bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-[10px] sm:text-xs rounded-lg retro-btn cursor-pointer min-h-[48px] flex flex-col items-center justify-center text-center"
                   >
-                    VENDER ({formatBRL(selectedStock.price * Math.min(selectedStock.owned, tradeAmount))})
+                    <span>VENDER</span>
+                    <span className="text-[9px] font-retro opacity-90 truncate max-w-full">
+                      {formatBRL(selectedStock.price * Math.min(selectedStock.owned, tradeAmount))}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -382,9 +388,12 @@ export const MarketTab: React.FC<MarketTabProps> = ({
                       soundEngine.playTrade(true);
                     }}
                     disabled={state.cash < selectedCrypto.price}
-                    className="py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-xs rounded-lg retro-btn cursor-pointer"
+                    className="p-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-[10px] sm:text-xs rounded-lg retro-btn cursor-pointer min-h-[48px] flex flex-col items-center justify-center text-center"
                   >
-                    COMPRAR 1 ({formatBRL(selectedCrypto.price)})
+                    <span>COMPRAR 1</span>
+                    <span className="text-[9px] font-retro opacity-90 truncate max-w-full">
+                      {formatBRL(selectedCrypto.price)}
+                    </span>
                   </button>
 
                   <button
@@ -393,9 +402,12 @@ export const MarketTab: React.FC<MarketTabProps> = ({
                       soundEngine.playTrade(false);
                     }}
                     disabled={selectedCrypto.owned <= 0}
-                    className="py-2.5 bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-xs rounded-lg retro-btn cursor-pointer"
+                    className="p-2 bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-pixel text-[10px] sm:text-xs rounded-lg retro-btn cursor-pointer min-h-[48px] flex flex-col items-center justify-center text-center"
                   >
-                    VENDER 1 ({formatBRL(selectedCrypto.price)})
+                    <span>VENDER 1</span>
+                    <span className="text-[9px] font-retro opacity-90 truncate max-w-full">
+                      {formatBRL(selectedCrypto.price)}
+                    </span>
                   </button>
                 </div>
               </div>

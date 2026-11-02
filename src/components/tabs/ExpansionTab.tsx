@@ -79,10 +79,10 @@ export const ExpansionTab: React.FC<ExpansionTabProps> = ({
                     soundEngine.playFanfare();
                     onSpeedUpConstruction();
                   }}
-                  className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-pixel text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow animate-pulse min-h-[44px]"
+                  className="w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-pixel text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow animate-pulse min-h-[48px]"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  <span>⚡ ACABAR MAIS RÁPIDO (-30 MIN REAL)</span>
+                  <Sparkles className="w-4 h-4 shrink-0" />
+                  <span className="truncate">⚡ ACABAR MAIS RÁPIDO (-30 MIN)</span>
                 </button>
               )}
             </div>
@@ -95,14 +95,14 @@ export const ExpansionTab: React.FC<ExpansionTabProps> = ({
                 }
               }}
               disabled={!canAffordFloor}
-              className={`w-full sm:w-auto px-5 py-3 rounded-xl font-pixel text-xs retro-btn flex items-center justify-center gap-2 cursor-pointer shadow-lg min-h-[48px] ${
+              className={`w-full sm:w-auto px-4 py-3 rounded-xl font-pixel text-[10px] sm:text-xs retro-btn flex items-center justify-center gap-2 cursor-pointer shadow-lg min-h-[48px] ${
                 canAffordFloor
                   ? 'bg-purple-600 hover:bg-purple-500 text-white animate-pulse'
                   : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
               }`}
             >
-              <Building2 className="w-4 h-4" />
-              <span>CONSTRUIR ANDAR {nextFloor} ({formatBRL(floorCost)})</span>
+              <Building2 className="w-4 h-4 shrink-0" />
+              <span className="truncate">CONSTRUIR ANDAR {nextFloor} ({formatBRL(floorCost)})</span>
             </button>
           )}
         </div>

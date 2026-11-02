@@ -52,10 +52,10 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({
 
           <button
             onClick={onTriggerSimulatedAttack}
-            className="w-full sm:w-auto px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-pixel text-xs rounded-xl retro-btn flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-4 py-3 bg-rose-600 hover:bg-rose-500 text-white font-pixel text-[10px] sm:text-xs rounded-xl retro-btn flex items-center justify-center gap-2 cursor-pointer min-h-[48px]"
           >
-            <Radio className="w-4 h-4 text-rose-300 animate-pulse" />
-            <span>TESTAR SIMULAÇÃO DE DEFESA</span>
+            <Radio className="w-4 h-4 text-rose-300 animate-pulse shrink-0" />
+            <span className="truncate">SIMULAR ATAQUE HACKER</span>
           </button>
         </div>
 
@@ -134,7 +134,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({
                       soundEngine.playRegister();
                     }}
                     disabled={!canAfford}
-                    className={`w-full py-2 px-3 rounded-lg font-pixel text-[10px] flex items-center justify-between retro-btn cursor-pointer ${
+                    className={`w-full py-2.5 px-3 rounded-lg font-pixel text-[10px] sm:text-xs flex items-center justify-between retro-btn cursor-pointer min-h-[48px] ${
                       canAfford
                         ? 'bg-cyan-600 hover:bg-cyan-500 text-white'
                         : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'

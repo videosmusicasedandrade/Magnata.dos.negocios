@@ -152,14 +152,14 @@ export const BankingTab: React.FC<BankingTabProps> = ({
                         soundEngine.playRegister();
                       }}
                       disabled={!hasEnoughReputation}
-                      className={`w-full py-2.5 px-3 rounded-lg font-pixel text-[10px] flex items-center justify-center gap-2 retro-btn cursor-pointer ${
+                      className={`w-full py-2.5 px-3 rounded-lg font-pixel text-[10px] sm:text-xs flex items-center justify-center gap-2 retro-btn cursor-pointer min-h-[48px] ${
                         hasEnoughReputation
                           ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
                           : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                       }`}
                     >
-                      <Landmark className="w-4 h-4" />
-                      <span>CONTRATAR EMPRÉSTIMO ({formatBRL(loan.amount)})</span>
+                      <Landmark className="w-4 h-4 shrink-0" />
+                      <span className="truncate">CONTRATAR ({formatBRL(loan.amount)})</span>
                     </button>
                   ) : (
                     <button
@@ -168,14 +168,14 @@ export const BankingTab: React.FC<BankingTabProps> = ({
                         soundEngine.playFanfare();
                       }}
                       disabled={state.cash < earlyPayoffCost}
-                      className={`w-full py-2.5 px-3 rounded-lg font-pixel text-[10px] flex items-center justify-center gap-2 retro-btn cursor-pointer ${
+                      className={`w-full py-2.5 px-3 rounded-lg font-pixel text-[10px] sm:text-xs flex items-center justify-center gap-2 retro-btn cursor-pointer min-h-[48px] ${
                         state.cash >= earlyPayoffCost
-                          ? 'bg-amber-500 hover:bg-amber-400 text-slate-950'
+                          ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold'
                           : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                       }`}
                     >
-                      <CheckCircle className="w-4 h-4" />
-                      <span>QUITAR ANTECIPADO COM 8% DESCONTO ({formatBRL(earlyPayoffCost)})</span>
+                      <CheckCircle className="w-4 h-4 shrink-0" />
+                      <span className="truncate">QUITAR COM -8% ({formatBRL(earlyPayoffCost)})</span>
                     </button>
                   )}
                 </div>
