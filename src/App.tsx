@@ -854,7 +854,7 @@ export default function App() {
   }
 
   return (
-    <div className="w-screen h-[100dvh] flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans">
+    <div className="w-full min-h-[100vh] flex flex-col bg-slate-950 text-slate-100 font-sans">
       {/* 1. TOP HUD */}
       <HUD
         cash={gameState.cash}
@@ -1025,7 +1025,7 @@ export default function App() {
       </main>
 
       {/* 3. DOCK / BOTTOM NAVIGATION BAR (Android Mobile + Web Optimized) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t-2 border-slate-700/80 px-2 py-1 flex items-center justify-around select-none shadow-2xl">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t-2 border-slate-700/80 px-2 py-1.5 flex items-center justify-start sm:justify-around overflow-x-auto gap-2 sm:gap-0 select-none shadow-2xl">
         <button
           onClick={() => {
             setActiveTab('escritorio');
