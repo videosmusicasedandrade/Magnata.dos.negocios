@@ -6,7 +6,13 @@
   color: #f8fafc;
 }
 
-html, body, #root {
+*, *::before, *::after {
+  box-sizing: border-box;
+  max-width: 100vw;
+}
+
+html {
+  font-size: 16px;
   width: 100%;
   max-width: 100vw;
   min-height: 100%;
@@ -20,22 +26,46 @@ html, body, #root {
   touch-action: manipulation;
 }
 
-/* Small screen mobile responsiveness rules (320px - 360px) */
-@media (max-width: 480px) {
-  body {
+body, #root {
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #020617 !important;
+  color: #f8fafc !important;
+  color-scheme: dark !important;
+  overflow-x: hidden !important;
+}
+
+/* Galaxy J5 Prime & Small Screen Responsive Scaling (320px - 380px) */
+@media (max-width: 420px) {
+  html {
     font-size: 14px;
-  }
-  h1, h2, h3 {
-    font-size: max(18px, 1.1em);
-  }
-  button, input, select {
-    min-height: 48px;
-    touch-action: manipulation;
   }
 }
 
+@media (max-width: 365px) {
+  html {
+    font-size: 12.5px;
+  }
+}
+
+@media (max-width: 330px) {
+  html {
+    font-size: 11.5px;
+  }
+}
+
+p, span, div, h1, h2, h3, h4, h5, button {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Typography Classes */
 .font-pixel {
   font-family: 'Press Start 2P', monospace;
+  letter-spacing: -0.02em;
 }
 
 .font-retro {
@@ -52,39 +82,48 @@ html, body, #root {
   image-rendering: crisp-edges;
 }
 
-/* Custom retro pixel borders and boxes */
+/* Custom retro pixel borders and boxes with high contrast */
 .retro-box {
   box-shadow: 
-    inset -2px -2px 0px 0px rgba(0, 0, 0, 0.6),
-    inset 2px 2px 0px 0px rgba(255, 255, 255, 0.25);
+    inset -2px -2px 0px 0px rgba(0, 0, 0, 0.8),
+    inset 2px 2px 0px 0px rgba(255, 255, 255, 0.3);
 }
 
 .retro-btn {
   box-shadow: 
-    inset -3px -3px 0px 0px rgba(0, 0, 0, 0.4),
-    inset 3px 3px 0px 0px rgba(255, 255, 255, 0.35);
+    inset -3px -3px 0px 0px rgba(0, 0, 0, 0.5),
+    inset 3px 3px 0px 0px rgba(255, 255, 255, 0.4);
   transition: transform 0.05s ease;
+  touch-action: manipulation;
 }
 
 .retro-btn:active {
   box-shadow: 
-    inset 3px 3px 0px 0px rgba(0, 0, 0, 0.5),
-    inset -2px -2px 0px 0px rgba(255, 255, 255, 0.15);
+    inset 3px 3px 0px 0px rgba(0, 0, 0, 0.6),
+    inset -2px -2px 0px 0px rgba(255, 255, 255, 0.2);
   transform: translate(2px, 2px);
 }
 
-/* Custom sleek scrollbar */
+/* Scrollbar styling */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.8);
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #3b82f6;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #60a5fa;
 }

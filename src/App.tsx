@@ -1211,125 +1211,125 @@ export default function App() {
       </main>
 
       {/* 3. DOCK / BOTTOM NAVIGATION BAR (Android Mobile + Web Optimized) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t-2 border-slate-700/80 px-2 py-1.5 flex items-center justify-start sm:justify-around overflow-x-auto gap-2 sm:gap-0 select-none shadow-2xl">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 max-w-[100vw] bg-slate-900/98 border-t-2 border-slate-700 px-2 py-1.5 flex items-center justify-start sm:justify-around overflow-x-auto scrollbar-none gap-2 sm:gap-1 select-none shadow-2xl">
         <button
           onClick={() => handleSelectTab('escritorio')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
             activeTab === 'escritorio'
-              ? 'text-amber-400 bg-amber-950/60 font-pixel scale-105'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
+              ? 'text-amber-400 bg-amber-950/80 font-pixel scale-105 border border-amber-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
           }`}
         >
           <Briefcase className="w-4 h-4" />
-          <span className="text-[10px]">Empresa</span>
+          <span className="text-[9px]">Empresa</span>
         </button>
 
         <button
           onClick={() => handleSelectTab('equipe')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
             activeTab === 'equipe'
-              ? 'text-indigo-400 bg-indigo-950/60 font-pixel scale-105 ring-2 ring-amber-400/80 animate-pulse'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
+              ? 'text-indigo-400 bg-indigo-950/80 font-pixel scale-105 border border-indigo-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
           }`}
         >
           <Users className="w-4 h-4" />
-          <span className="text-[10px]">Equipe</span>
+          <span className="text-[9px]">Equipe</span>
         </button>
 
         <button
           onClick={() => handleSelectTab('mercado')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
             activeTab === 'mercado'
-              ? 'text-blue-400 bg-blue-950/60 font-pixel scale-105'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
+              ? 'text-blue-400 bg-blue-950/80 font-pixel scale-105 border border-blue-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
           }`}
         >
           <TrendingUp className="w-4 h-4" />
-          <span className="text-[10px]">Mercado</span>
-        </button>
-
-        <button
-          onClick={() => handleSelectTab('expansao')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-            activeTab === 'expansao'
-              ? 'text-purple-400 bg-purple-950/60 font-pixel scale-105'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
-          }`}
-        >
-          <Building2 className="w-4 h-4" />
-          <span className="text-[10px]">Expansão</span>
-        </button>
-
-        <button
-          onClick={() => handleSelectTab('financas')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-            activeTab === 'financas'
-              ? 'text-emerald-400 bg-emerald-950/60 font-pixel scale-105'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
-          }`}
-        >
-          <Landmark className="w-4 h-4" />
-          <span className="text-[10px]">Banco/IR</span>
-        </button>
-
-        <button
-          onClick={() => handleSelectTab('cyber')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-            activeTab === 'cyber'
-              ? 'text-cyan-400 bg-cyan-950/60 font-pixel scale-105'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
-          }`}
-        >
-          <ShieldCheck className="w-4 h-4" />
-          <span className="text-[10px]">Cyber</span>
-        </button>
-
-        <button
-          onClick={() => handleSelectTab('ranking')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-            activeTab === 'ranking'
-              ? 'text-amber-400 bg-amber-950/60 font-pixel scale-105 ring-1 ring-amber-400'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
-          }`}
-        >
-          <Award className="w-4 h-4 text-amber-400" />
-          <span className="text-[10px]">Top 100</span>
-        </button>
-
-        <button
-          onClick={() => handleSelectTab('loja')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
-            activeTab === 'loja'
-              ? 'text-emerald-400 bg-emerald-950/60 font-pixel scale-105 ring-1 ring-emerald-400'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
-          }`}
-        >
-          <ShoppingBag className="w-4 h-4 text-emerald-400" />
-          <span className="text-[10px]">Loja Play</span>
+          <span className="text-[9px]">Mercado</span>
         </button>
 
         <button
           onClick={() => handleSelectTab('consorcio')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
             activeTab === 'consorcio'
-              ? 'text-purple-400 bg-purple-950/60 font-pixel scale-105 ring-1 ring-purple-400'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
+              ? 'text-purple-400 bg-purple-950/80 font-pixel scale-105 border border-purple-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
           }`}
         >
           <Handshake className="w-4 h-4 text-purple-400" />
-          <span className="text-[10px]">Consórcio</span>
+          <span className="text-[9px]">Consórcio</span>
+        </button>
+
+        <button
+          onClick={() => handleSelectTab('expansao')}
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
+            activeTab === 'expansao'
+              ? 'text-purple-400 bg-purple-950/80 font-pixel scale-105 border border-purple-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
+          }`}
+        >
+          <Building2 className="w-4 h-4" />
+          <span className="text-[9px]">Expansão</span>
+        </button>
+
+        <button
+          onClick={() => handleSelectTab('financas')}
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
+            activeTab === 'financas'
+              ? 'text-emerald-400 bg-emerald-950/80 font-pixel scale-105 border border-emerald-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
+          }`}
+        >
+          <Landmark className="w-4 h-4" />
+          <span className="text-[9px]">Banco/IR</span>
+        </button>
+
+        <button
+          onClick={() => handleSelectTab('cyber')}
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
+            activeTab === 'cyber'
+              ? 'text-cyan-400 bg-cyan-950/80 font-pixel scale-105 border border-cyan-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
+          }`}
+        >
+          <ShieldCheck className="w-4 h-4" />
+          <span className="text-[9px]">Cyber</span>
+        </button>
+
+        <button
+          onClick={() => handleSelectTab('ranking')}
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
+            activeTab === 'ranking'
+              ? 'text-amber-400 bg-amber-950/80 font-pixel scale-105 border border-amber-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
+          }`}
+        >
+          <Award className="w-4 h-4 text-amber-400" />
+          <span className="text-[9px]">Top 100</span>
+        </button>
+
+        <button
+          onClick={() => handleSelectTab('loja')}
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
+            activeTab === 'loja'
+              ? 'text-emerald-400 bg-emerald-950/80 font-pixel scale-105 border border-emerald-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
+          }`}
+        >
+          <ShoppingBag className="w-4 h-4 text-emerald-400" />
+          <span className="text-[9px]">Loja Play</span>
         </button>
 
         <button
           onClick={() => handleSelectTab('conquistas')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+          className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer shrink-0 min-h-[48px] min-w-[52px] ${
             activeTab === 'conquistas'
-              ? 'text-yellow-400 bg-yellow-950/60 font-pixel scale-105'
-              : 'text-slate-400 hover:text-slate-200 font-retro'
+              ? 'text-yellow-400 bg-yellow-950/80 font-pixel scale-105 border border-yellow-500/50'
+              : 'text-slate-300 hover:text-white font-retro'
           }`}
         >
           <Trophy className="w-4 h-4" />
-          <span className="text-[10px]">Metas</span>
+          <span className="text-[9px]">Metas</span>
         </button>
       </nav>
 
