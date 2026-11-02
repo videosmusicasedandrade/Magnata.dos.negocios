@@ -355,6 +355,10 @@ export interface GameState {
   breachesSuffered: number;
   totalAdsWatched: number;
   lastSaveTimestamp: number;
+  
+  // Guided Tutorial State
+  tutorialStep?: number;
+  tutorialActive?: boolean;
 }
 
 export interface LeaderboardEntry {

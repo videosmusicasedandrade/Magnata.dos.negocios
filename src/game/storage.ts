@@ -100,6 +100,10 @@ export function createInitialGameState(originId: BusinessOriginId = 'garagem'): 
     activeDecorations: [],
     temporaryEmployees: [],
     temporaryDefenseBoost: null,
+
+    // Guided Tutorial
+    tutorialStep: 0,
+    tutorialActive: true,
   };
 }
 
@@ -140,6 +144,8 @@ export function loadGame(): OfflineEarningsResult | null {
       temporaryEmployees: parsed.temporaryEmployees || [],
       temporaryDefenseBoost: parsed.temporaryDefenseBoost || null,
       totalAdsWatched: parsed.totalAdsWatched || 0,
+      tutorialStep: typeof parsed.tutorialStep === 'number' ? parsed.tutorialStep : 0,
+      tutorialActive: typeof parsed.tutorialActive === 'boolean' ? parsed.tutorialActive : false,
     };
 
     // Calculate offline gains

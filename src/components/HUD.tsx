@@ -31,6 +31,7 @@ interface HUDProps {
   onOpenWheel: () => void;
   onOpenShop: () => void;
   onOpenLeaderboard?: () => void;
+  onOpenTutorial?: () => void;
 }
 
 export const HUD: React.FC<HUDProps> = ({
@@ -51,6 +52,7 @@ export const HUD: React.FC<HUDProps> = ({
   onOpenWheel,
   onOpenShop,
   onOpenLeaderboard,
+  onOpenTutorial,
 }) => {
   const cycleInfo = getEconomicCycleInfo(economicCycle);
   const latestNews = newsFeed[newsFeed.length - 1];
@@ -78,6 +80,19 @@ export const HUD: React.FC<HUDProps> = ({
 
         {/* Action Shortcuts & Audio Mute */}
         <div className="flex items-center gap-1.5 shrink-0 ml-2">
+          {onOpenTutorial && (
+            <button
+              onClick={() => {
+                onOpenTutorial();
+                soundEngine.playCoin();
+              }}
+              className="flex items-center gap-1 px-2 py-0.5 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 font-pixel text-[9px] shadow cursor-pointer transition-transform active:scale-95 font-bold"
+              title="Abrir Tutorial Guiado"
+            >
+              <span>💡 TUTORIAL</span>
+            </button>
+          )}
+
           {onOpenLeaderboard && (
             <button
               onClick={() => {

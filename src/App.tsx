@@ -43,6 +43,7 @@ import { DilemmaModal } from './components/DilemmaModal';
 import { SkyscraperModal } from './components/SkyscraperModal';
 import { WheelOfFortuneModal } from './components/WheelOfFortuneModal';
 import { RewardedAdModal } from './components/RewardedAdModal';
+import { GuidedTutorialBanner, TUTORIAL_STEPS } from './components/GuidedTutorialBanner';
 import { processGooglePlayPurchase, restorePurchases } from './game/billing';
 import { applyWheelReward } from './game/adsAndWheel';
 import { updatePlayerCeoProfile } from './game/leaderboard';
@@ -286,6 +287,62 @@ export default function App() {
     return () => clearInterval(saveTimer);
   }, [inGame, gameState]);
 
+  // Tutorial step handlers
+  const handleNextTutorialStep = () => {
+    setGameState((prev) => {
+      const currentStep = prev.tutorialStep ?? 0;
+      if (currentStep >= TUTORIAL_STEPS.length - 1) {
+        return {
+          ...prev,
+          tutorialActive: false,
+        };
+      }
+      const nextStep = currentStep + 1;
+      const targetTab = TUTORIAL_STEPS[nextStep]?.targetTab as TabId;
+      if (targetTab) {
+        setActiveTab(targetTab);
+      }
+      return {
+        ...prev,
+        tutorialStep: nextStep,
+        tutorialActive: true,
+      };
+    });
+  };
+
+  const handleSkipTutorial = () => {
+    setGameState((prev) => ({
+      ...prev,
+      tutorialActive: false,
+    }));
+  };
+
+  const handleOpenTutorial = () => {
+    setGameState((prev) => ({
+      ...prev,
+      tutorialStep: 0,
+      tutorialActive: true,
+    }));
+    setActiveTab('escritorio');
+  };
+
+  const handleSelectTab = (tab: TabId) => {
+    setActiveTab(tab);
+    soundEngine.playCoin();
+
+    setGameState((prev) => {
+      if (!prev.tutorialActive) return prev;
+      const step = prev.tutorialStep ?? 0;
+      if (step === 1 && tab === 'equipe') {
+        return { ...prev, tutorialStep: 2 };
+      }
+      if (step === 2 && tab === 'mercado') {
+        return { ...prev, tutorialStep: 3 };
+      }
+      return prev;
+    });
+  };
+
   // Manual Tap handler
   const handleTap = useCallback((x?: number, y?: number) => {
     setGameState((prev) => {
@@ -293,12 +350,21 @@ export default function App() {
       const isCrit = Math.random() < 0.15;
       const finalGain = isCrit ? clickVal * 3 : clickVal;
 
+      const nextClicks = prev.totalClicks + 1;
+      let nextStep = prev.tutorialStep ?? 0;
+      if (prev.tutorialActive && (nextStep === 0 || nextStep === undefined)) {
+        if (nextClicks >= 3) {
+          nextStep = 1;
+        }
+      }
+
       return {
         ...prev,
         cash: prev.cash + finalGain,
         totalEarnedAllTime: prev.totalEarnedAllTime + finalGain,
         currentQuarterEarnings: prev.currentQuarterEarnings + finalGain,
-        totalClicks: prev.totalClicks + 1,
+        totalClicks: nextClicks,
+        tutorialStep: nextStep,
       };
     });
   }, []);
@@ -872,8 +938,9 @@ export default function App() {
         onOpenSkyscraper={() => setIsSkyscraperOpen(true)}
         onOpenCycleInfo={() => setIsCycleInfoOpen(true)}
         onOpenWheel={() => setIsRewardedAdOpen(true)}
-        onOpenShop={() => setActiveTab('loja')}
-        onOpenLeaderboard={() => setActiveTab('ranking')}
+        onOpenShop={() => handleSelectTab('loja')}
+        onOpenLeaderboard={() => handleSelectTab('ranking')}
+        onOpenTutorial={handleOpenTutorial}
       />
 
       {/* Floating Billing / Reward Toast */}
@@ -1027,10 +1094,7 @@ export default function App() {
       {/* 3. DOCK / BOTTOM NAVIGATION BAR (Android Mobile + Web Optimized) */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t-2 border-slate-700/80 px-2 py-1.5 flex items-center justify-start sm:justify-around overflow-x-auto gap-2 sm:gap-0 select-none shadow-2xl">
         <button
-          onClick={() => {
-            setActiveTab('escritorio');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('escritorio')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'escritorio'
               ? 'text-amber-400 bg-amber-950/60 font-pixel scale-105'
@@ -1042,13 +1106,10 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => {
-            setActiveTab('equipe');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('equipe')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'equipe'
-              ? 'text-indigo-400 bg-indigo-950/60 font-pixel scale-105'
+              ? 'text-indigo-400 bg-indigo-950/60 font-pixel scale-105 ring-2 ring-amber-400/80 animate-pulse'
               : 'text-slate-400 hover:text-slate-200 font-retro'
           }`}
         >
@@ -1057,10 +1118,7 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => {
-            setActiveTab('mercado');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('mercado')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'mercado'
               ? 'text-blue-400 bg-blue-950/60 font-pixel scale-105'
@@ -1072,10 +1130,7 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => {
-            setActiveTab('expansao');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('expansao')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'expansao'
               ? 'text-purple-400 bg-purple-950/60 font-pixel scale-105'
@@ -1087,10 +1142,7 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => {
-            setActiveTab('financas');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('financas')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'financas'
               ? 'text-emerald-400 bg-emerald-950/60 font-pixel scale-105'
@@ -1102,10 +1154,7 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => {
-            setActiveTab('cyber');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('cyber')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'cyber'
               ? 'text-cyan-400 bg-cyan-950/60 font-pixel scale-105'
@@ -1117,10 +1166,7 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => {
-            setActiveTab('ranking');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('ranking')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'ranking'
               ? 'text-amber-400 bg-amber-950/60 font-pixel scale-105 ring-1 ring-amber-400'
@@ -1132,10 +1178,7 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => {
-            setActiveTab('loja');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('loja')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'loja'
               ? 'text-emerald-400 bg-emerald-950/60 font-pixel scale-105 ring-1 ring-emerald-400'
@@ -1147,10 +1190,7 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => {
-            setActiveTab('conquistas');
-            soundEngine.playCoin();
-          }}
+          onClick={() => handleSelectTab('conquistas')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'conquistas'
               ? 'text-yellow-400 bg-yellow-950/60 font-pixel scale-105'
@@ -1163,6 +1203,17 @@ export default function App() {
       </nav>
 
       {/* 4. MODALS & POPUPS */}
+      {/* Guided Tutorial Overlay Banner */}
+      {gameState.tutorialActive && (
+        <GuidedTutorialBanner
+          currentStep={gameState.tutorialStep ?? 0}
+          activeTab={activeTab}
+          onNextStep={handleNextTutorialStep}
+          onSkipTutorial={handleSkipTutorial}
+          onNavigateTab={(tab) => handleSelectTab(tab as TabId)}
+        />
+      )}
+
       {/* Rewarded Video Ad Modal */}
       <RewardedAdModal
         isOpen={isRewardedAdOpen}
