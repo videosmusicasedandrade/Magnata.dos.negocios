@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.font-pixel {
+  font-family: 'Press Start 2P', monospace;
+}
+
+.font-retro {
+  font-family: 'Silkscreen', monospace;
+}
+
+.font-heading {
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+/* Crisp retro pixel art rendering */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Custom retro pixel borders and boxes */
+.retro-box {
+  box-shadow: 
+    inset -2px -2px 0px 0px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 0px 0px rgba(255, 255, 255, 0.25);
+}
+
+.retro-btn {
+  box-shadow: 
+    inset -3px -3px 0px 0px rgba(0, 0, 0, 0.4),
+    inset 3px 3px 0px 0px rgba(255, 255, 255, 0.35);
+  transition: transform 0.05s ease;
+}
+
+.retro-btn:active {
+  box-shadow: 
+    inset 3px 3px 0px 0px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 0px 0px rgba(255, 255, 255, 0.15);
+  transform: translate(2px, 2px);
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
