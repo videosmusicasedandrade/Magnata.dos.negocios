@@ -39,23 +39,23 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   }, [hasSavedGame, showOriginSelect, selectedOrigin, onContinueGame, onStartNewGame]);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-slate-950 flex flex-col justify-between items-center p-6 select-none">
+    <div className="relative min-h-[100dvh] w-full bg-slate-950 flex flex-col justify-between items-center p-3 sm:p-6 overflow-y-auto select-none">
       {/* Background Retro Skyline & Stars */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px]" />
       </div>
 
       {/* Top Bar with Mute & Tag */}
-      <header className="w-full max-w-4xl flex items-center justify-between z-10">
-        <div className="flex items-center gap-2 bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-full text-xs font-retro text-amber-400">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>INSPIRADO NO CLÁSSICO TAP TAP TRILLIONAIRE</span>
+      <header className="w-full max-w-4xl flex items-center justify-between gap-2 z-10 mb-2">
+        <div className="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700/80 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-retro text-amber-400">
+          <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+          <span className="truncate">TAP TAP TRILLIONAIRE STYLE</span>
         </div>
 
         <button
           onClick={onToggleMute}
           aria-label={isMuted ? 'Ativar Som' : 'Desativar Som'}
-          className="p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+          className="p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
         >
           {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
         </button>

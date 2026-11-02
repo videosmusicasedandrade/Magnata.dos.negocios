@@ -854,7 +854,7 @@ export default function App() {
   }
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans">
+    <div className="w-screen h-[100dvh] flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans">
       {/* 1. TOP HUD */}
       <HUD
         cash={gameState.cash}
