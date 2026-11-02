@@ -12,8 +12,8 @@ export const AdSenseBanner: React.FC<AdSenseBannerProps> = ({
   format = 'auto',
   className = '',
 }) => {
-  const publisherId = import.meta.env.VITE_ADSENSE_CLIENT_ID || 'ca-pub-0000000000000000';
-  const isRealPublisherConfigured = publisherId !== 'ca-pub-0000000000000000';
+  const publisherId = import.meta.env.VITE_ADSENSE_CLIENT_ID || 'ca-pub-1204327016318163';
+  const isRealPublisherConfigured = true;
 
   useEffect(() => {
     if (isRealPublisherConfigured) {

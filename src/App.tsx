@@ -54,6 +54,7 @@ import { TermsOfServiceModal } from './components/legal/TermsOfServiceModal';
 import { AboutAndContactModal } from './components/legal/AboutAndContactModal';
 import { CookieConsentBanner } from './components/legal/CookieConsentBanner';
 import { AdSenseBanner } from './components/AdSenseBanner';
+import { StickyBottomAdBanner } from './components/StickyBottomAdBanner';
 import { REAL_TO_GAME_SPEED_FACTOR, getFloorConstructionTimeRealSeconds } from './game/time';
 import {
   Briefcase,
@@ -1087,7 +1088,7 @@ export default function App() {
       )}
 
       {/* 2. MAIN WORKSPACE (Scrollable Game Hub) */}
-      <main className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 space-y-4 max-w-7xl w-full mx-auto pb-24">
+      <main className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 space-y-4 max-w-7xl w-full mx-auto pb-36 sm:pb-44">
         {/* Offline Earnings Welcome Banner */}
         {offlineNotice && (
           <div className="bg-emerald-950/80 border-2 border-emerald-500 rounded-xl p-3.5 flex items-center justify-between gap-3 retro-box">
@@ -1272,6 +1273,9 @@ export default function App() {
           </footer>
         </section>
       </main>
+
+      {/* Discrete Sticky Bottom AdSense Banner (Non-intrusive) */}
+      <StickyBottomAdBanner />
 
       {/* 3. DOCK / BOTTOM NAVIGATION BAR (Android Mobile + Web Optimized) */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 max-w-[100vw] bg-slate-900/98 border-t-2 border-slate-700 px-2 py-1.5 flex items-center justify-start sm:justify-around overflow-x-auto scrollbar-none gap-2 sm:gap-1 select-none shadow-2xl">
