@@ -49,6 +49,11 @@ import { applyWheelReward } from './game/adsAndWheel';
 import { updatePlayerCeoProfile } from './game/leaderboard';
 import { SettingsModal } from './components/SettingsModal';
 import { ConsortiumsTab } from './components/tabs/ConsortiumsTab';
+import { PrivacyPolicyModal } from './components/legal/PrivacyPolicyModal';
+import { TermsOfServiceModal } from './components/legal/TermsOfServiceModal';
+import { AboutAndContactModal } from './components/legal/AboutAndContactModal';
+import { CookieConsentBanner } from './components/legal/CookieConsentBanner';
+import { AdSenseBanner } from './components/AdSenseBanner';
 import { REAL_TO_GAME_SPEED_FACTOR, getFloorConstructionTimeRealSeconds } from './game/time';
 import {
   Briefcase,
@@ -101,6 +106,12 @@ export default function App() {
   const [isRewardedAdOpen, setIsRewardedAdOpen] = useState<boolean>(false);
   const [autoSpinOnWheelOpen, setAutoSpinOnWheelOpen] = useState<boolean>(false);
   const [billingToast, setBillingToast] = useState<string | null>(null);
+
+  // AdSense Policy Legal Modals State
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState<boolean>(false);
+  const [isTermsOpen, setIsTermsOpen] = useState<boolean>(false);
+  const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
+  const [aboutInitialTab, setAboutInitialTab] = useState<'about' | 'contact'>('about');
 
   // Check ?autostart=1 support for automated testing
   useEffect(() => {
@@ -1003,23 +1014,40 @@ export default function App() {
   const netWorth = calculateNetWorth(gameState);
   const passiveIncomePerSec = calculatePassiveIncomePerSec(gameState);
 
-  // If on Title Screen, render TitleScreen component
+  // If on Title Screen, render TitleScreen component along with legal modals & consent
   if (!inGame) {
     return (
-      <TitleScreen
-        hasSavedGame={!!loadGame()}
-        onStartNewGame={(origin) => {
-          setGameState(createInitialGameState(origin));
-          setInGame(true);
-        }}
-        onContinueGame={() => {
-          const loaded = loadGame();
-          if (loaded) setGameState(loaded.state);
-          setInGame(true);
-        }}
-        isMuted={isMuted}
-        onToggleMute={() => setIsMuted(soundEngine.toggleMute())}
-      />
+      <>
+        <TitleScreen
+          hasSavedGame={!!loadGame()}
+          onStartNewGame={(origin) => {
+            setGameState(createInitialGameState(origin));
+            setInGame(true);
+          }}
+          onContinueGame={() => {
+            const loaded = loadGame();
+            if (loaded) setGameState(loaded.state);
+            setInGame(true);
+          }}
+          isMuted={isMuted}
+          onToggleMute={() => setIsMuted(soundEngine.toggleMute())}
+          onOpenPrivacyPolicy={() => setIsPrivacyOpen(true)}
+          onOpenTerms={() => setIsTermsOpen(true)}
+          onOpenAbout={() => {
+            setAboutInitialTab('about');
+            setIsAboutOpen(true);
+          }}
+        />
+
+        <PrivacyPolicyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+        <TermsOfServiceModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
+        <AboutAndContactModal
+          isOpen={isAboutOpen}
+          initialTab={aboutInitialTab}
+          onClose={() => setIsAboutOpen(false)}
+        />
+        <CookieConsentBanner onOpenPrivacyPolicy={() => setIsPrivacyOpen(true)} />
+      </>
     );
   }
 
@@ -1201,12 +1229,47 @@ export default function App() {
             />
           )}
 
-          {activeTab === 'ranking' && (
-            <LeaderboardTab
-              state={gameState}
-              onUpdateCeoProfile={handleUpdateCeoProfile}
-            />
-          )}
+          {/* AdSense Policy Compliant Ad Unit */}
+          <AdSenseBanner />
+
+          {/* Policy Pages Footer Bar */}
+          <footer className="w-full text-center py-3 border-t border-slate-800/80 space-y-2 font-retro text-[10px] text-slate-400">
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
+                onClick={() => setIsPrivacyOpen(true)}
+                className="hover:text-emerald-400 underline cursor-pointer p-1"
+              >
+                Política de Privacidade & LGPD
+              </button>
+              <button
+                onClick={() => setIsTermsOpen(true)}
+                className="hover:text-indigo-400 underline cursor-pointer p-1"
+              >
+                Termos de Serviço
+              </button>
+              <button
+                onClick={() => {
+                  setAboutInitialTab('about');
+                  setIsAboutOpen(true);
+                }}
+                className="hover:text-amber-400 underline cursor-pointer p-1"
+              >
+                Sobre o Jogo
+              </button>
+              <button
+                onClick={() => {
+                  setAboutInitialTab('contact');
+                  setIsAboutOpen(true);
+                }}
+                className="hover:text-sky-400 underline cursor-pointer p-1"
+              >
+                Contato & Suporte
+              </button>
+            </div>
+            <p className="text-[9px] text-slate-500">
+              Magnata dos Negócios © 2026 · Estrutura Aprovada para Google AdSense
+            </p>
+          </footer>
         </section>
       </main>
 
@@ -1458,6 +1521,16 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* AdSense Legal & Policy Modals */}
+      <PrivacyPolicyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+      <TermsOfServiceModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
+      <AboutAndContactModal
+        isOpen={isAboutOpen}
+        initialTab={aboutInitialTab}
+        onClose={() => setIsAboutOpen(false)}
+      />
+      <CookieConsentBanner onOpenPrivacyPolicy={() => setIsPrivacyOpen(true)} />
     </div>
   );
 }

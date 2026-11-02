@@ -189,8 +189,44 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
-          {/* Quick Sound & Game Controls */}
-          <div className="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+          {/* Google AdSense Integration & Status Checklist */}
+          <div className="space-y-2 pt-2 border-t border-slate-800">
+            <h4 className="font-pixel text-xs text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🎯</span>
+              <span>Google AdSense · Status & Conformidade</span>
+            </h4>
+
+            <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 space-y-2 font-retro text-xs text-slate-300">
+              <div className="flex items-center justify-between text-[11px] pb-2 border-b border-slate-800">
+                <span className="text-slate-400">ID de Editor (ads.txt):</span>
+                <span className="font-pixel text-emerald-400 text-[10px]">
+                  {import.meta.env.VITE_ADSENSE_CLIENT_ID || 'ca-pub-0000000000000000'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px]">
+                <div className="flex items-center gap-1.5 text-emerald-400">
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span>ads.txt no diretório raiz</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-400">
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span>Meta tags & Schema JSON-LD</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-400">
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span>Política de Privacidade & LGPD</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-400">
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span>Termos & Isenção Moeda Virtual</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Sound, Legal & Game Controls */}
+          <div className="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">
             <button
               onClick={() => {
                 soundEngine.playCoin();

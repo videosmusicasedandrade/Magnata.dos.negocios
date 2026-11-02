@@ -10,6 +10,9 @@ interface TitleScreenProps {
   onContinueGame: () => void;
   isMuted: boolean;
   onToggleMute: () => void;
+  onOpenPrivacyPolicy?: () => void;
+  onOpenTerms?: () => void;
+  onOpenAbout?: () => void;
 }
 
 export const TitleScreen: React.FC<TitleScreenProps> = ({
@@ -18,6 +21,9 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   onContinueGame,
   isMuted,
   onToggleMute,
+  onOpenPrivacyPolicy,
+  onOpenTerms,
+  onOpenAbout,
 }) => {
   const [selectedOrigin, setSelectedOrigin] = useState<BusinessOriginId>('garagem');
   const [showOriginSelect, setShowOriginSelect] = useState<boolean>(!hasSavedGame);
@@ -170,9 +176,35 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
       </main>
 
       {/* 3. Footer */}
-      <footer className="w-full max-w-xl text-center z-10 shrink-0 pt-3">
-        <div className="font-retro text-[10px] text-slate-400 border-t border-slate-800 pt-2">
-          Toque para enriquecer · Compatível com todos os celulares · 100% Offline
+      <footer className="w-full max-w-xl text-center z-10 shrink-0 pt-3 space-y-1.5">
+        <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-retro text-slate-400">
+          {onOpenPrivacyPolicy && (
+            <button
+              onClick={onOpenPrivacyPolicy}
+              className="hover:text-emerald-400 underline cursor-pointer p-1"
+            >
+              Privacidade & LGPD
+            </button>
+          )}
+          {onOpenTerms && (
+            <button
+              onClick={onOpenTerms}
+              className="hover:text-indigo-400 underline cursor-pointer p-1"
+            >
+              Termos de Uso
+            </button>
+          )}
+          {onOpenAbout && (
+            <button
+              onClick={onOpenAbout}
+              className="hover:text-amber-400 underline cursor-pointer p-1"
+            >
+              Sobre & Contato
+            </button>
+          )}
+        </div>
+        <div className="font-retro text-[9px] text-slate-500 border-t border-slate-800/80 pt-1.5">
+          Magnata dos Negócios · Conforme Diretrizes do Google AdSense · 100% Offline
         </div>
       </footer>
     </div>
