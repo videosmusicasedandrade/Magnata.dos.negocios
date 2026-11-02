@@ -1,6 +1,6 @@
-import React from 'react';
-import { EconomicCycle, NewsItem } from '../types/game';
+import { EconomicCycle, NewsItem, PlanType } from '../types/game';
 import { getEconomicCycleInfo } from '../game/economy';
+import { formatGameTime } from '../game/time';
 import { soundEngine } from '../game/audio';
 import {
   Volume2,
@@ -11,6 +11,9 @@ import {
   ShieldAlert,
   Award,
   Sparkles,
+  Settings,
+  Clock,
+  Crown,
 } from 'lucide-react';
 
 interface HUDProps {
@@ -24,8 +27,11 @@ interface HUDProps {
   cyberDefenseRating: number;
   hackerAttackUnderway: boolean;
   newsFeed: NewsItem[];
+  plan: PlanType;
+  gameTimeSeconds: number;
   isMuted: boolean;
   onToggleMute: () => void;
+  onOpenSettings: () => void;
   onOpenSkyscraper: () => void;
   onOpenCycleInfo: () => void;
   onOpenWheel: () => void;
@@ -45,8 +51,11 @@ export const HUD: React.FC<HUDProps> = ({
   cyberDefenseRating,
   hackerAttackUnderway,
   newsFeed,
+  plan,
+  gameTimeSeconds,
   isMuted,
   onToggleMute,
+  onOpenSettings,
   onOpenSkyscraper,
   onOpenCycleInfo,
   onOpenWheel,
@@ -56,6 +65,7 @@ export const HUD: React.FC<HUDProps> = ({
 }) => {
   const cycleInfo = getEconomicCycleInfo(economicCycle);
   const latestNews = newsFeed[newsFeed.length - 1];
+  const clockInfo = formatGameTime(gameTimeSeconds);
 
   const formatBRL = (val: number) => {
     if (val >= 1e12) return `R$ ${(val / 1e12).toFixed(2)}T`;
@@ -78,8 +88,21 @@ export const HUD: React.FC<HUDProps> = ({
           </p>
         </div>
 
-        {/* Action Shortcuts & Audio Mute */}
+        {/* Action Shortcuts & Audio Mute & Gear Settings */}
         <div className="flex items-center gap-1.5 shrink-0 ml-2">
+          {/* Gear Settings Button (⚙️) */}
+          <button
+            onClick={() => {
+              soundEngine.playCoin();
+              onOpenSettings();
+            }}
+            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-pixel text-[10px] font-bold shadow cursor-pointer transition-transform active:scale-95 min-h-[36px]"
+            title="Configurações & Troca de Plano"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            <span>⚙️ {plan}</span>
+          </button>
+
           {onOpenTutorial && (
             <button
               onClick={() => {
@@ -127,7 +150,7 @@ export const HUD: React.FC<HUDProps> = ({
               soundEngine.playCoin();
             }}
             aria-label={isMuted ? 'Ativar Som' : 'Desativar Som'}
-            className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+            className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
           >
             {isMuted ? <VolumeX className="w-3.5 h-3.5 text-rose-400" /> : <Volume2 className="w-3.5 h-3.5 text-emerald-400" />}
           </button>
@@ -179,6 +202,12 @@ export const HUD: React.FC<HUDProps> = ({
               +{formatBRL(passiveIncomePerSec)}/s
             </div>
           </div>
+        </div>
+
+        {/* In-Game Clock Display */}
+        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-950 border border-amber-500/40 text-amber-300 font-pixel text-[10px]">
+          <Clock className="w-3.5 h-3.5 text-amber-400" />
+          <span>{clockInfo.fullStr}</span>
         </div>
 
         {/* Economic Cycle Pill */}

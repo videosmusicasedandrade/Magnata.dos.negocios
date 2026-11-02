@@ -1234,3 +1234,62 @@ export const LAST_NAMES = [
   'Lima', 'Gomes', 'Costa', 'Ribeiro', 'Martins', 'Carvalho', 'Almeida', 'Lopes',
   'Melo', 'Barbosa', 'Cardoso', 'Rocha', 'Dias', 'Monteiro', 'Teixeira', 'Moreira'
 ];
+
+export const INITIAL_SERVICE_EQUIPMENT: ServiceEquipment[] = [
+  {
+    id: 'cafeteira_automatica',
+    name: 'Cafeteira Automática Expresso',
+    category: 'servico',
+    cost: 15000,
+    owned: false,
+    icon: '☕',
+    description: 'Café ilimitado e quentinho para manter a equipe focada durante todo o expediente.',
+    benefitText: '+10% de produtividade para toda a equipe',
+    teamProductivityBoost: 0.10,
+  },
+  {
+    id: 'maquina_doacoes',
+    name: 'Máquina de Vendas & Doações',
+    category: 'servico',
+    cost: 40000,
+    owned: false,
+    icon: '🏭',
+    description: 'Pontos de snack e bebidas no escritório gerando renda passiva contínua.',
+    benefitText: '+R$ 50/s de renda passiva garantida',
+    passiveCashPerSec: 50,
+  },
+  {
+    id: 'computadores_ultra',
+    name: 'Computadores de Última Geração',
+    category: 'servico',
+    cost: 100000,
+    owned: false,
+    icon: '💻',
+    description: 'Estações de trabalho ultra rápidas com 3 monitores para analistas e peritos.',
+    benefitText: '+15% de rendimento para analistas especialistas',
+    expertBonusMultiplier: 0.15,
+  },
+  {
+    id: 'cadeiras_ergonomicas',
+    name: 'Cadeiras Ergonômicas Gamer VIP',
+    category: 'servico',
+    cost: 60000,
+    owned: false,
+    icon: '🪑',
+    description: 'Ajuste de coluna e conforto total. Evita dores e mantém a moral lá no alto.',
+    benefitText: 'Recuperação de humor da equipe 2x mais rápida',
+    moraleRecoveryMultiplier: 2.0,
+  },
+  {
+    id: 'laboratorio_treino',
+    name: 'Laboratório de Treinamento Avançado',
+    category: 'servico',
+    cost: 250000,
+    owned: false,
+    icon: '🔬',
+    description: 'Simuladores de mercado em tempo real para capacitação expressa de funcionários.',
+    benefitText: 'Reduz custo e tempo de treinamento em 25%',
+    trainingCostDiscount: 0.25,
+  },
+];
+

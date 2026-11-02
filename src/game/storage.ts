@@ -9,6 +9,7 @@ import {
   INITIAL_LOANS,
   INITIAL_PARTNERSHIPS,
   INITIAL_PHYSICAL_ASSETS,
+  INITIAL_SERVICE_EQUIPMENT,
   INITIAL_STOCKS,
 } from './constants';
 import { calculatePassiveIncomePerSec } from './economy';
@@ -27,6 +28,12 @@ export function createInitialGameState(originId: BusinessOriginId = 'garagem'): 
     totalEarnedAllTime: origin.startingCash,
     reputation: 100, // Starts at 100
     skyscraperFloors: 1, // Starts at Floor 1
+
+    // Plan & In-Game Time
+    plan: 'VIP',
+    gameTimeSeconds: 0,
+    floorUnderConstruction: null,
+    serviceEquipments: JSON.parse(JSON.stringify(INITIAL_SERVICE_EQUIPMENT)),
 
     economicCycle: 'expansao',
     cycleTimer: 60, // 60s per cycle
@@ -135,6 +142,11 @@ export function loadGame(): OfflineEarningsResult | null {
     const state: GameState = {
       ...createInitialGameState(parsed.origin || 'garagem'),
       ...parsed,
+      plan: parsed.plan === 'COMUM' ? 'COMUM' : 'VIP',
+      gameTimeSeconds: typeof parsed.gameTimeSeconds === 'number' ? parsed.gameTimeSeconds : 0,
+      serviceEquipments: Array.isArray(parsed.serviceEquipments)
+        ? parsed.serviceEquipments
+        : JSON.parse(JSON.stringify(INITIAL_SERVICE_EQUIPMENT)),
       purchasedNonConsumables: parsed.purchasedNonConsumables || [],
       transactionsHistory: parsed.transactionsHistory || [],
       wheelSpinCount: parsed.wheelSpinCount || 0,
@@ -151,6 +163,21 @@ export function loadGame(): OfflineEarningsResult | null {
     // Calculate offline gains
     const now = Date.now();
     const elapsedSeconds = Math.max(0, Math.floor((now - (state.lastSaveTimestamp || now)) / 1000));
+    
+    // Advance game time (1 real second = 6 game seconds)
+    state.gameTimeSeconds += elapsedSeconds * 6;
+
+    // Advance floor construction if active
+    if (state.floorUnderConstruction && state.floorUnderConstruction.realSecondsRemaining > 0) {
+      state.floorUnderConstruction.realSecondsRemaining = Math.max(
+        0,
+        state.floorUnderConstruction.realSecondsRemaining - elapsedSeconds
+      );
+      if (state.floorUnderConstruction.realSecondsRemaining === 0) {
+        state.skyscraperFloors = state.floorUnderConstruction.targetFloor;
+        state.floorUnderConstruction = null;
+      }
+    }
     
     // Cap offline gains to 8 hours (28,800 seconds)
     const cappedSeconds = Math.min(28800, elapsedSeconds);

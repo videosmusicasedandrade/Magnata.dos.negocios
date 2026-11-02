@@ -19,6 +19,8 @@ import {
   PieChart,
 } from 'lucide-react';
 
+import { VipLockBanner } from '../VipLockBanner';
+
 interface MarketTabProps {
   state: GameState;
   onBuyStock: (stockId: string, quantity: number) => void;
@@ -29,6 +31,7 @@ interface MarketTabProps {
   onRedeemFixedIncome: (fixedIncomeId: string) => void;
   onPayConsortiumInstallment: (consortiumId: string) => void;
   onBidConsortium: (consortiumId: string) => void;
+  onOpenSettings?: () => void;
 }
 
 export const MarketTab: React.FC<MarketTabProps> = ({
@@ -121,7 +124,14 @@ export const MarketTab: React.FC<MarketTabProps> = ({
 
       {/* 2. SUBTAB: BOLSA DE VALORES */}
       {subTab === 'bolsa' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        state.plan === 'COMUM' ? (
+          <VipLockBanner
+            featureName="Bolsa de Valores (Ações Uoogle, Applo, Microhard)"
+            description="Compre e venda ações das maiores empresas fictícias do mercado, receba dividendos periódicos e multiplique seu capital. Exclusivo do Plano VIP!"
+            onOpenSettings={onOpenSettings || (() => {})}
+          />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Stock Tickers List */}
           <div className="lg:col-span-2 space-y-2 max-h-[480px] overflow-y-auto pr-1">
             {state.stocks.map((stock) => {
@@ -263,11 +273,19 @@ export const MarketTab: React.FC<MarketTabProps> = ({
             </div>
           )}
         </div>
+        )
       )}
 
       {/* 3. SUBTAB: CRIPTOMOEDAS */}
       {subTab === 'cripto' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        state.plan === 'COMUM' ? (
+          <VipLockBanner
+            featureName="Mercado de Criptomoedas (Bitouro, PixToken, Solanares)"
+            description="Opere moedas digitais de altíssima volatilidade, acompanhe picos e desvalorizações em tempo real e lucre com a valorização. Exclusivo do Plano VIP!"
+            onOpenSettings={onOpenSettings || (() => {})}
+          />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-2 max-h-[480px] overflow-y-auto pr-1">
             {state.cryptos.map((crypto) => {
               const changePercent = ((crypto.price - crypto.initialPrice) / crypto.initialPrice) * 100;
@@ -384,6 +402,7 @@ export const MarketTab: React.FC<MarketTabProps> = ({
             </div>
           )}
         </div>
+        )
       )}
 
       {/* 4. SUBTAB: RENDA FIXA */}

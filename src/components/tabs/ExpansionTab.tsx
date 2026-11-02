@@ -13,6 +13,7 @@ import {
 interface ExpansionTabProps {
   state: GameState;
   onBuildSkyscraperFloor: () => void;
+  onSpeedUpConstruction?: () => void;
   onUpgradePhysicalAsset: (assetId: string) => void;
   onAcquireCompetitor: (competitorId: string) => void;
 }
@@ -20,17 +21,20 @@ interface ExpansionTabProps {
 export const ExpansionTab: React.FC<ExpansionTabProps> = ({
   state,
   onBuildSkyscraperFloor,
+  onSpeedUpConstruction,
   onUpgradePhysicalAsset,
   onAcquireCompetitor,
 }) => {
-  // Cost to build next floor: 5000 * 1.5^(floors - 1)
+  // Cost to build next floor: 5000 * 1.45^(floors - 1)
   const nextFloor = state.skyscraperFloors + 1;
   const floorCost = Math.round(5000 * Math.pow(1.45, state.skyscraperFloors - 1));
-  const canAffordFloor = state.cash >= floorCost && state.skyscraperFloors < 50;
+  const canAffordFloor = state.cash >= floorCost && state.skyscraperFloors < 50 && !state.floorUnderConstruction;
 
   const formatBRL = (val: number) => {
     return `R$ ${Math.round(val).toLocaleString('pt-BR')}`;
   };
+
+  const construction = state.floorUnderConstruction;
 
   return (
     <div className="space-y-6">
@@ -58,23 +62,49 @@ export const ExpansionTab: React.FC<ExpansionTabProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={() => {
-              if (canAffordFloor) {
-                onBuildSkyscraperFloor();
-                soundEngine.playFanfare();
-              }
-            }}
-            disabled={!canAffordFloor}
-            className={`w-full sm:w-auto px-5 py-3 rounded-xl font-pixel text-xs retro-btn flex items-center justify-center gap-2 cursor-pointer shadow-lg ${
-              canAffordFloor
-                ? 'bg-purple-600 hover:bg-purple-500 text-white animate-pulse'
-                : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-            }`}
-          >
-            <Building2 className="w-4 h-4" />
-            <span>CONSTRUIR ANDAR {nextFloor} ({formatBRL(floorCost)})</span>
-          </button>
+          {construction ? (
+            <div className="w-full sm:w-auto bg-slate-950/90 border-2 border-purple-500/80 p-3.5 rounded-xl space-y-2">
+              <div className="flex items-center justify-between text-xs font-pixel text-purple-300 gap-3">
+                <span>🏗️ Construindo {construction.targetFloor}º Andar</span>
+                <span className="text-amber-400 font-bold">
+                  {Math.floor(construction.realSecondsRemaining / 60)}m {construction.realSecondsRemaining % 60}s
+                </span>
+              </div>
+              <p className="font-retro text-[11px] text-slate-400">
+                Tempo de jogo correspondente: {Math.round((construction.realSecondsRemaining * 6) / 60)} min em jogo.
+              </p>
+              {onSpeedUpConstruction && (
+                <button
+                  onClick={() => {
+                    soundEngine.playFanfare();
+                    onSpeedUpConstruction();
+                  }}
+                  className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-pixel text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow animate-pulse min-h-[44px]"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>⚡ ACABAR MAIS RÁPIDO (-30 MIN REAL)</span>
+                </button>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                if (canAffordFloor) {
+                  onBuildSkyscraperFloor();
+                  soundEngine.playFanfare();
+                }
+              }}
+              disabled={!canAffordFloor}
+              className={`w-full sm:w-auto px-5 py-3 rounded-xl font-pixel text-xs retro-btn flex items-center justify-center gap-2 cursor-pointer shadow-lg min-h-[48px] ${
+                canAffordFloor
+                  ? 'bg-purple-600 hover:bg-purple-500 text-white animate-pulse'
+                  : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+              }`}
+            >
+              <Building2 className="w-4 h-4" />
+              <span>CONSTRUIR ANDAR {nextFloor} ({formatBRL(floorCost)})</span>
+            </button>
+          )}
         </div>
       </div>
 

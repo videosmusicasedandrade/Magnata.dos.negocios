@@ -58,6 +58,11 @@ export function calculateClickPower(state: GameState): number {
     multiplier *= 1.20;
   }
 
+  // Plano VIP Bonus (+20% nos ganhos)
+  if (state.plan === 'VIP') {
+    multiplier *= 1.20;
+  }
+
   return Math.max(1, Math.round(state.baseClickValue * multiplier));
 }
 
@@ -71,16 +76,29 @@ export function calculatePassiveIncomePerSec(state: GameState): number {
   const origin = BUSINESS_ORIGINS.find((o) => o.id === state.origin);
   const originMultiplier = origin ? origin.passiveBonus : 1.0;
 
+  // Check Service Equipment boosts
+  const cafeteiraOwned = state.serviceEquipments?.some((e) => e.id === 'cafeteira_automatica' && e.owned);
+  const maquinaOwned = state.serviceEquipments?.some((e) => e.id === 'maquina_doacoes' && e.owned);
+  const pcsUltraOwned = state.serviceEquipments?.some((e) => e.id === 'computadores_ultra' && e.owned);
+
+  const teamBoost = cafeteiraOwned ? 1.10 : 1.0;
+  const expertBoost = pcsUltraOwned ? 1.15 : 1.0;
+
   // 1. Regular employees productivity
   for (const emp of state.employees) {
     const rankMult = RANK_MULTIPLIERS[emp.rank] || 1.0;
     const moraleMult = Math.max(0.3, emp.morale / 100);
     // Specialists have a 1.5x global multiplier
-    const specBonus = emp.specialty !== 'geral' ? 1.5 : 1.0;
-    totalPerSec += emp.baseProductivity * rankMult * moraleMult * specBonus;
+    const specBonus = emp.specialty !== 'geral' ? 1.5 * expertBoost : 1.0;
+    totalPerSec += emp.baseProductivity * rankMult * moraleMult * specBonus * teamBoost;
   }
 
-  // 1.1 Temporary employees (from Wheel of Fortune, zero salary, 100% morale)
+  // 1.1 Service Equipment: Máquina de Doações (+R$ 50/s)
+  if (maquinaOwned) {
+    totalPerSec += 50;
+  }
+
+  // 1.2 Temporary employees (from Wheel of Fortune, zero salary, 100% morale)
   if (state.temporaryEmployees) {
     for (const temp of state.temporaryEmployees) {
       if (temp.expiresAt > Date.now()) {
@@ -125,6 +143,11 @@ export function calculatePassiveIncomePerSec(state: GameState): number {
   // VIP Decoration: Mesa Holográfica Quântica (+25% em toda a renda)
   if (state.activeDecorations && state.activeDecorations.includes('quantum_desk')) {
     totalPerSec *= 1.25;
+  }
+
+  // Plano VIP Bonus (+20% em todos os ganhos passivos)
+  if (state.plan === 'VIP') {
+    totalPerSec *= 1.20;
   }
 
   // Less monthly loans interest deducted proportionally

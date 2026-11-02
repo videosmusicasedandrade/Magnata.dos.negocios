@@ -282,6 +282,39 @@ export interface MarketTip {
   expiresAt: number;
 }
 
+export type PlanType = 'VIP' | 'COMUM';
+
+export type ServiceEquipmentId =
+  | 'cafeteira_automatica'
+  | 'maquina_doacoes'
+  | 'computadores_ultra'
+  | 'cadeiras_ergonomicas'
+  | 'laboratorio_treino';
+
+export interface ServiceEquipment {
+  id: ServiceEquipmentId;
+  name: string;
+  category: 'servico';
+  cost: number;
+  owned: boolean;
+  icon: string;
+  description: string;
+  benefitText: string;
+  teamProductivityBoost?: number; // e.g. 0.10 (+10%)
+  passiveCashPerSec?: number; // e.g. 50 (R$/s)
+  expertBonusMultiplier?: number; // e.g. 0.15 (+15%)
+  moraleRecoveryMultiplier?: number; // e.g. 2.0 (2x)
+  trainingCostDiscount?: number; // e.g. 0.25 (25% off)
+}
+
+export interface FloorConstructionState {
+  targetFloor: number;
+  realSecondsRemaining: number;
+  totalRealSeconds: number;
+  cost: number;
+  startedAtTimestamp: number;
+}
+
 export interface GameState {
   version: number;
   companyName: string;
@@ -291,6 +324,18 @@ export interface GameState {
   totalEarnedAllTime: number;
   reputation: number; // 0 to 1000
   skyscraperFloors: number; // 1 to 50
+
+  // Plan Management (Gear Settings)
+  plan: PlanType; // 'VIP' | 'COMUM' (defaults to 'VIP')
+
+  // Real-Time ↔ Game-Time System
+  gameTimeSeconds: number; // Accumulated in-game time in seconds (starts Day 1 08:00 AM)
+
+  // Skyscraper Construction Timers & Rewarded Ad Speedup
+  floorUnderConstruction?: FloorConstructionState | null;
+
+  // Consórcio de Serviços Equipment
+  serviceEquipments: ServiceEquipment[];
   
   // Economic cycle
   economicCycle: EconomicCycle;

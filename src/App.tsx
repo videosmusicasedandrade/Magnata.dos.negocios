@@ -47,6 +47,9 @@ import { GuidedTutorialBanner, TUTORIAL_STEPS } from './components/GuidedTutoria
 import { processGooglePlayPurchase, restorePurchases } from './game/billing';
 import { applyWheelReward } from './game/adsAndWheel';
 import { updatePlayerCeoProfile } from './game/leaderboard';
+import { SettingsModal } from './components/SettingsModal';
+import { ConsortiumsTab } from './components/tabs/ConsortiumsTab';
+import { REAL_TO_GAME_SPEED_FACTOR, getFloorConstructionTimeRealSeconds } from './game/time';
 import {
   Briefcase,
   Users,
@@ -61,12 +64,14 @@ import {
   Info,
   ShoppingBag,
   Gift,
+  Settings,
 } from 'lucide-react';
 
 type TabId =
   | 'escritorio'
   | 'equipe'
   | 'mercado'
+  | 'consorcio'
   | 'expansao'
   | 'financas'
   | 'cyber'
@@ -86,6 +91,7 @@ export default function App() {
   const [isMuted, setIsMuted] = useState<boolean>(soundEngine.getIsMuted());
 
   // Modals state
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isSkyscraperOpen, setIsSkyscraperOpen] = useState<boolean>(false);
   const [isTaxModalOpen, setIsTaxModalOpen] = useState<boolean>(false);
   const [isCycleInfoOpen, setIsCycleInfoOpen] = useState<boolean>(false);
@@ -145,7 +151,26 @@ export default function App() {
       setGameState((prev) => {
         const next = { ...prev };
 
-        // 1. Passive income
+        // 1. In-Game Clock Advance (1s real = 6s game)
+        next.gameTimeSeconds = (next.gameTimeSeconds || 0) + REAL_TO_GAME_SPEED_FACTOR;
+
+        // 1.1 Floor Construction Timer
+        if (next.floorUnderConstruction && next.floorUnderConstruction.realSecondsRemaining > 0) {
+          next.floorUnderConstruction = {
+            ...next.floorUnderConstruction,
+            realSecondsRemaining: next.floorUnderConstruction.realSecondsRemaining - 1,
+          };
+          if (next.floorUnderConstruction.realSecondsRemaining <= 0) {
+            next.skyscraperFloors = next.floorUnderConstruction.targetFloor;
+            next.maxStaffCapacity = Math.min(12, 4 + Math.floor(next.skyscraperFloors / 5));
+            next.reputation += 40;
+            next.floorUnderConstruction = null;
+            setBillingToast(`🏢 ${next.skyscraperFloors}º Andar do Arranha-Céu Concluído!`);
+            setTimeout(() => setBillingToast(null), 4000);
+          }
+        }
+
+        // 1.2 Passive income
         const passiveIncome = calculatePassiveIncomePerSec(next);
         next.cash += passiveIncome;
         next.totalEarnedAllTime += passiveIncome;
@@ -636,21 +661,100 @@ export default function App() {
     });
   };
 
-  // Expansion: Skyscraper & Assets
+  // Plan Switch Handler
+  const handleTogglePlan = (newPlan: 'VIP' | 'COMUM') => {
+    setGameState((prev) => ({
+      ...prev,
+      plan: newPlan,
+    }));
+    setBillingToast(`Plano alterado para ${newPlan}!`);
+    setTimeout(() => setBillingToast(null), 3000);
+  };
+
+  // Service Equipment Purchase Handler
+  const handleBuyServiceEquipment = (equipmentId: string) => {
+    setGameState((prev) => {
+      const equip = prev.serviceEquipments?.find((e) => e.id === equipmentId);
+      if (!equip || prev.cash < equip.cost || equip.owned) return prev;
+
+      const updated = prev.serviceEquipments.map((e) =>
+        e.id === equipmentId ? { ...e, owned: true } : e
+      );
+
+      return {
+        ...prev,
+        cash: prev.cash - equip.cost,
+        serviceEquipments: updated,
+        reputation: prev.reputation + 75,
+      };
+    });
+    setBillingToast('🎉 Carta de Equipamento Adquirida e Ativada!');
+    setTimeout(() => setBillingToast(null), 3000);
+  };
+
+  // Skyscraper Construction & Ad Speedup Handlers
   const handleBuildSkyscraperFloor = () => {
     setGameState((prev) => {
-      const nextFloor = prev.skyscraperFloors + 1;
+      const targetFloor = prev.skyscraperFloors + 1;
       const cost = Math.round(5000 * Math.pow(1.45, prev.skyscraperFloors - 1));
-      if (prev.cash < cost || prev.skyscraperFloors >= 50) return prev;
+      if (prev.cash < cost || prev.skyscraperFloors >= 50 || prev.floorUnderConstruction) return prev;
+
+      const totalRealSeconds = getFloorConstructionTimeRealSeconds(targetFloor);
 
       return {
         ...prev,
         cash: prev.cash - cost,
-        skyscraperFloors: nextFloor,
-        maxStaffCapacity: Math.min(12, 4 + Math.floor(nextFloor / 5)),
-        reputation: prev.reputation + 40,
+        floorUnderConstruction: {
+          targetFloor,
+          realSecondsRemaining: totalRealSeconds,
+          totalRealSeconds,
+          cost,
+          startedAtTimestamp: Date.now(),
+        },
       };
     });
+  };
+
+  const handleSpeedUpConstruction = () => {
+    setGameState((prev) => {
+      if (!prev.floorUnderConstruction) return prev;
+      // Reduce 30 real minutes (1800 real seconds / 3h game time)
+      const newRemaining = Math.max(0, prev.floorUnderConstruction.realSecondsRemaining - 1800);
+      let updatedFloors = prev.skyscraperFloors;
+      let activeConstruction = {
+        ...prev.floorUnderConstruction,
+        realSecondsRemaining: newRemaining,
+      };
+
+      if (newRemaining <= 0) {
+        updatedFloors = prev.floorUnderConstruction.targetFloor;
+        return {
+          ...prev,
+          skyscraperFloors: updatedFloors,
+          maxStaffCapacity: Math.min(12, 4 + Math.floor(updatedFloors / 5)),
+          reputation: prev.reputation + 40,
+          floorUnderConstruction: null,
+          totalAdsWatched: prev.totalAdsWatched + 1,
+        };
+      }
+
+      return {
+        ...prev,
+        floorUnderConstruction: activeConstruction,
+        totalAdsWatched: prev.totalAdsWatched + 1,
+      };
+    });
+    setBillingToast('⚡ Tempo de construção reduzido em 30 minutos reais!');
+    setTimeout(() => setBillingToast(null), 3000);
+  };
+
+  const handleResetGame = () => {
+    const initial = createInitialGameState('garagem');
+    saveGame(initial);
+    setGameState(initial);
+    setIsSettingsOpen(false);
+    setBillingToast('Progresso do jogo foi completamente reiniciado.');
+    setTimeout(() => setBillingToast(null), 3000);
   };
 
   const handleUpgradePhysicalAsset = (assetId: string) => {
@@ -933,8 +1037,11 @@ export default function App() {
         cyberDefenseRating={gameState.cyberDefenseRating}
         hackerAttackUnderway={gameState.hackerAttackUnderway}
         newsFeed={gameState.newsFeed}
+        plan={gameState.plan}
+        gameTimeSeconds={gameState.gameTimeSeconds}
         isMuted={isMuted}
         onToggleMute={() => setIsMuted(soundEngine.toggleMute())}
+        onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenSkyscraper={() => setIsSkyscraperOpen(true)}
         onOpenCycleInfo={() => setIsCycleInfoOpen(true)}
         onOpenWheel={() => setIsRewardedAdOpen(true)}
@@ -1025,6 +1132,17 @@ export default function App() {
               onRedeemFixedIncome={handleRedeemFixedIncome}
               onPayConsortiumInstallment={handlePayConsortiumInstallment}
               onBidConsortium={handleBidConsortium}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+            />
+          )}
+
+          {activeTab === 'consorcio' && (
+            <ConsortiumsTab
+              state={gameState}
+              onPayConsortiumInstallment={handlePayConsortiumInstallment}
+              onBidConsortium={handleBidConsortium}
+              onBuyServiceEquipment={handleBuyServiceEquipment}
+              onOpenSettings={() => setIsSettingsOpen(true)}
             />
           )}
 
@@ -1032,6 +1150,7 @@ export default function App() {
             <ExpansionTab
               state={gameState}
               onBuildSkyscraperFloor={handleBuildSkyscraperFloor}
+              onSpeedUpConstruction={handleSpeedUpConstruction}
               onUpgradePhysicalAsset={handleUpgradePhysicalAsset}
               onAcquireCompetitor={handleAcquireCompetitor}
             />
@@ -1190,6 +1309,18 @@ export default function App() {
         </button>
 
         <button
+          onClick={() => handleSelectTab('consorcio')}
+          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
+            activeTab === 'consorcio'
+              ? 'text-purple-400 bg-purple-950/60 font-pixel scale-105 ring-1 ring-purple-400'
+              : 'text-slate-400 hover:text-slate-200 font-retro'
+          }`}
+        >
+          <Handshake className="w-4 h-4 text-purple-400" />
+          <span className="text-[10px]">Consórcio</span>
+        </button>
+
+        <button
           onClick={() => handleSelectTab('conquistas')}
           className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-all cursor-pointer ${
             activeTab === 'conquistas'
@@ -1203,6 +1334,17 @@ export default function App() {
       </nav>
 
       {/* 4. MODALS & POPUPS */}
+      {/* Settings & Gear Control Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        currentPlan={gameState.plan}
+        isMuted={isMuted}
+        onTogglePlan={handleTogglePlan}
+        onToggleMute={() => setIsMuted(soundEngine.toggleMute())}
+        onResetGame={handleResetGame}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+
       {/* Guided Tutorial Overlay Banner */}
       {gameState.tutorialActive && (
         <GuidedTutorialBanner
