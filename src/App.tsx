@@ -53,7 +53,6 @@ import { PrivacyPolicyModal } from './components/legal/PrivacyPolicyModal';
 import { TermsOfServiceModal } from './components/legal/TermsOfServiceModal';
 import { AboutAndContactModal } from './components/legal/AboutAndContactModal';
 import { CookieConsentBanner } from './components/legal/CookieConsentBanner';
-import { AdSenseBanner } from './components/AdSenseBanner';
 import { StickyBottomAdBanner } from './components/StickyBottomAdBanner';
 import { REAL_TO_GAME_SPEED_FACTOR, getFloorConstructionTimeRealSeconds } from './game/time';
 import {
@@ -1230,8 +1229,6 @@ export default function App() {
             />
           )}
 
-          {/* AdSense Policy Compliant Ad Unit */}
-          <AdSenseBanner />
 
           {/* Policy Pages Footer Bar */}
           <footer className="w-full text-center py-3 border-t border-slate-800/80 space-y-2 font-retro text-[10px] text-slate-400">
